@@ -27,7 +27,7 @@ os.putenv('PATH', java_path + ";" + os.getenv('PATH'))
 
 # The method num counter works roughly, which makes different from actual. 
 # This num is better to be lower if there is something error in after compiling.
-# smali统计的方法数与DEX实际限制的65535出入较大，如果还报错继续将改值调低即可
+# smali统计的方法数与DEX实际限制的65535出入较大，如果还报错继续将该值调低即可
 methods_limit = 40000
 cur_dex_num = 1
 cur_method_count = 0
