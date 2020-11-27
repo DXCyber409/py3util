@@ -14,12 +14,14 @@ def on_message(message, data):
 
 jscode = open('script/test.js', encoding='utf-8').read()
 
-# device = frida.get_usb_device(0)
-# pid = device.spawn(["com.unionpay"])
+device = frida.get_usb_device(0)
+
+# pid = device.spawn(["test"])
 # session = device.attach(pid)
 # device.resume(pid)
 
-session = frida.get_usb_device(0).attach('com.vnpay.bidv')
+app = device.get_frontmost_application()
+session = device.attach(app.pid)
 
 script = session.create_script(jscode, runtime='v8')
 script.on('message', on_message)
