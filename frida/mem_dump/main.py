@@ -36,6 +36,12 @@ def on_message(message, data):
                 f.write(data)
             so_fix(filename)
             print('[+]Dump %s ok' % filename)
+        # handle sodumpAll
+        if (payload['action'] == 'sodumpAll' and data is not None):
+            filename = 'dump/%s' % payload['filename']
+            with open(filename, mode='wb') as f:
+                f.write(data)
+            print('[+]Dump %s ok' % filename)
         # handle memdump
         if (payload['action'] == 'memdump' and data is not None):
             filename = 'dump/%s' % payload['filename']
@@ -66,8 +72,9 @@ script = session.create_script(jscode, runtime='v8')
 script.on('message', on_message)
 script.load()
 
-script.exports.sodump('sgsecuritybodyso-5.4.66')
+# script.exports.sodump('sgsecuritybodyso-5.4.66')
 # script.exports.memdump1(0x85015000, 0x850ac000)
 # script.exports.memdump2(0x9cce3000, 0x3000)
+# script.exports.sodump_all("com.test.test")
 
 os.system('pause')

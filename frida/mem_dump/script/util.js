@@ -23,6 +23,9 @@ rpc.exports = {
   memdump2: function (addr_start, size) {
     return memdump2(addr_start, size);
   },
+  sodumpAll: function (tag) {
+    return sodump_all(tag);
+  },
 };
 
 function sodump(module_name) {
@@ -72,4 +75,23 @@ function memdump2(addr_start, size) {
   };
   send(JSON.stringify(payload), buffer);
   return true;
+}
+
+function sodump_all(tag) {
+  console.log(tag);
+  var modules = Process.enumerateModules();
+  for (var i=0; i<modules.length; i++) {
+    var module = modules[i];
+    if (module.path.indexOf(tag) !== -1 && module.path.indexOf(".so") !== -1) {
+      // console.log(JSON.stringify(module));
+      Memory.protect(ptr(module.base), module.size, 'rwx');
+      console.log('name:{0} base:{1} size:{2} mprotect patch success.'.format(module.name, module.base, module.size));
+      var payload = {
+        "action": "sodumpAll",
+        "filename": module.name + "." + module.base,
+      };
+      var buffer = ptr(module.base).readByteArray(module.size);
+      send(JSON.stringify(payload), buffer);
+    }
+  }
 }
